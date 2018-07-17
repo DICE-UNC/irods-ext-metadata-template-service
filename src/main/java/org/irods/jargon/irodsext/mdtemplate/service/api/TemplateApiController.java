@@ -1,11 +1,11 @@
-package io.swagger.api;
-
-import io.swagger.model.Element;
-import io.swagger.model.Template;
-import io.swagger.service.IrodsSampleTemplateService;
+package org.irods.jargon.irodsext.mdtemplate.service.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
+
+import org.irods.jargon.irodsext.mdtemplate.service.model.Element;
+import org.irods.jargon.irodsext.mdtemplate.service.model.Template;
+import org.irods.jargon.irodsext.mdtemplate.service.service.IrodsSampleTemplateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-07-16T19:45:57.555Z")
+@javax.annotation.Generated(value = "org.irods.jargon.irodsext.mdtemplate.service.codegen.languages.SpringCodegen", date = "2018-07-16T19:45:57.555Z")
 
 @Controller
 public class TemplateApiController implements TemplateApi {

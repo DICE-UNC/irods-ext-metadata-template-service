@@ -3,11 +3,14 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package io.swagger.api;
+package org.irods.jargon.irodsext.mdtemplate.service.api;
 
-import io.swagger.model.Element;
-import io.swagger.model.Template;
 import io.swagger.annotations.*;
+
+import org.irods.jargon.irodsext.mdtemplate.service.model.Element;
+import org.irods.jargon.irodsext.mdtemplate.service.model.Template;
+import org.irods.jargon.metadatatemplate.model.MDTemplate;
+import org.irods.jargon.metadatatemplate.model.MDTemplateElement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-07-16T19:45:57.555Z")
+@javax.annotation.Generated(value = "org.irods.jargon.irodsext.mdtemplate.service.codegen.languages.SpringCodegen", date = "2018-07-16T19:45:57.555Z")
 
 @Api(value = "template", description = "the template API")
 public interface TemplateApi {
@@ -73,7 +76,7 @@ public interface TemplateApi {
     @RequestMapping(value = "/template/{guid}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Template> findTemplateByGuid(@ApiParam(value = "pass an a guid to get template",required=true) @PathVariable("guid") String guid);
+    ResponseEntity<MDTemplate> findTemplateByGuid(@ApiParam(value = "pass an a guid to get template",required=true) @PathVariable("guid") String guid);
 
 
     @ApiOperation(value = "Get Element by guid", nickname = "getElementByGuid", notes = "", response = Element.class, tags={ "Element", })
@@ -84,7 +87,7 @@ public interface TemplateApi {
     @RequestMapping(value = "/template/{guid}/element/{guid}",
         produces = { "application/xml", "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Element> getElementByGuid(@ApiParam(value = "The Element that needs to be fetched. ",required=true) @PathVariable("guid") Integer guid);
+    ResponseEntity<MDTemplateElement> getElementByGuid(@ApiParam(value = "The Element that needs to be fetched. ",required=true) @PathVariable("guid") Integer guid);
 
 
     @ApiOperation(value = "Updated Element", nickname = "updateElement", notes = "", tags={ "Element", })

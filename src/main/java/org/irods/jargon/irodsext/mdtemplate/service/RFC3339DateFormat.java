@@ -1,4 +1,4 @@
-package io.swagger;
+package org.irods.jargon.irodsext.mdtemplate.service;
 
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 import com.fasterxml.jackson.databind.util.ISO8601Utils;

@@ -1,4 +1,4 @@
-package io.swagger.configuration;
+package org.irods.jargon.irodsext.mdtemplate.service.configuration;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonTokenId;

@@ -1,8 +1,8 @@
-package io.swagger.api;
+package org.irods.jargon.irodsext.mdtemplate.service.api;
 
 import javax.xml.bind.annotation.XmlTransient;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-07-16T19:45:57.555Z")
+@javax.annotation.Generated(value = "org.irods.jargon.irodsext.mdtemplate.service.codegen.languages.SpringCodegen", date = "2018-07-16T19:45:57.555Z")
 
 @javax.xml.bind.annotation.XmlRootElement
 public class ApiResponseMessage {
