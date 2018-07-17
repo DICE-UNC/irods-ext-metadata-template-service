@@ -1,4 +1,4 @@
-package org.irods.jargon.irodsext.mdtemplate.service.configuration;
+package org.irods.jargon.irodsext.mdtemplate.configuration;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonTokenId;

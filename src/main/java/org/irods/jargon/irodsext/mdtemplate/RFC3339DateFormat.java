@@ -1,4 +1,4 @@
-package org.irods.jargon.irodsext.mdtemplate.service;
+package org.irods.jargon.irodsext.mdtemplate;
 
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 import com.fasterxml.jackson.databind.util.ISO8601Utils;

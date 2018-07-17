@@ -3,12 +3,10 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package org.irods.jargon.irodsext.mdtemplate.service.api;
+package org.irods.jargon.irodsext.mdtemplate.api;
 
 import io.swagger.annotations.*;
 
-import org.irods.jargon.irodsext.mdtemplate.service.model.Element;
-import org.irods.jargon.irodsext.mdtemplate.service.model.Template;
 import org.irods.jargon.metadatatemplate.model.MDTemplate;
 import org.irods.jargon.metadatatemplate.model.MDTemplateElement;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
-@javax.annotation.Generated(value = "org.irods.jargon.irodsext.mdtemplate.service.codegen.languages.SpringCodegen", date = "2018-07-16T19:45:57.555Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-07-17T12:26:03.800Z")
 
 @Api(value = "template", description = "the template API")
 public interface TemplateApi {
@@ -36,7 +34,7 @@ public interface TemplateApi {
     @RequestMapping(value = "/template/{guid}/element",
         produces = { "application/xml", "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> addElement(@ApiParam(value = "unique object task name",required=true) @PathVariable("guid") Integer guid,@ApiParam(value = "Created Element object" ,required=true )  @Valid @RequestBody Element body);
+    ResponseEntity<Void> addElement(@ApiParam(value = "unique object task name",required=true) @PathVariable("guid") Integer guid,@ApiParam(value = "Created Element object" ,required=true )  @Valid @RequestBody MDTemplateElement body);
 
 
     @ApiOperation(value = "Add a new Template", nickname = "addTemplate", notes = "Adding a new metadata template", tags={ "Templates", })
@@ -46,7 +44,7 @@ public interface TemplateApi {
         produces = { "application/xml", "application/json" }, 
         consumes = { "application/json", "application/xml" },
         method = RequestMethod.POST)
-    ResponseEntity<Void> addTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody Template templateData);
+    ResponseEntity<Void> addTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData);
 
 
     @ApiOperation(value = "Delete Element", nickname = "deleteElement", notes = "", tags={ "Element", })
@@ -76,12 +74,12 @@ public interface TemplateApi {
     @RequestMapping(value = "/template/{guid}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<MDTemplate> findTemplateByGuid(@ApiParam(value = "pass an a guid to get template",required=true) @PathVariable("guid") String guid);
+    ResponseEntity<Void> findTemplateByGuid(@ApiParam(value = "pass an a guid to get template",required=true) @PathVariable("guid") String guid);
 
 
-    @ApiOperation(value = "Get Element by guid", nickname = "getElementByGuid", notes = "", response = Element.class, tags={ "Element", })
+    @ApiOperation(value = "Get Element by guid", nickname = "getElementByGuid", notes = "", response = MDTemplateElement.class, tags={ "Element", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "successful operation", response = Element.class),
+        @ApiResponse(code = 200, message = "successful operation", response = MDTemplateElement.class),
         @ApiResponse(code = 400, message = "Invalid guid supplied"),
         @ApiResponse(code = 404, message = "Element not found") })
     @RequestMapping(value = "/template/{guid}/element/{guid}",
@@ -97,7 +95,7 @@ public interface TemplateApi {
     @RequestMapping(value = "/template/{guid}/element/{guid}",
         produces = { "application/xml", "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<Void> updateElement(@ApiParam(value = "Element that need to be updated",required=true) @PathVariable("guid") Integer guid,@ApiParam(value = "Updated Element object" ,required=true )  @Valid @RequestBody Element body);
+    ResponseEntity<Void> updateElement(@ApiParam(value = "Element that need to be updated",required=true) @PathVariable("guid") Integer guid,@ApiParam(value = "Updated Element object" ,required=true )  @Valid @RequestBody MDTemplateElement body);
 
 
     @ApiOperation(value = "Update an existing Template", nickname = "updateTemplate", notes = "", tags={ "Templates", })
@@ -109,6 +107,6 @@ public interface TemplateApi {
         produces = { "application/xml", "application/json" }, 
         consumes = { "application/json", "application/xml" },
         method = RequestMethod.PUT)
-    ResponseEntity<Void> updateTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody Template templateData);
+    ResponseEntity<Void> updateTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData);
 
 }

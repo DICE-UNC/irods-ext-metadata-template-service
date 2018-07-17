@@ -1,4 +1,4 @@
-package org.irods.jargon.irodsext.mdtemplate.service;
+package org.irods.jargon.irodsext.mdtemplate;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
@@ -10,7 +10,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableSwagger2
-@ComponentScan(basePackages = { "org.irods.jargon.irodsext.mdtemplate.service", "org.irods.jargon.irodsext.mdtemplate.service.api" })
+@ComponentScan(basePackages = { "org.irods.jargon.irodsext.mdtemplate", "org.irods.jargon.irodsext.mdtemplate.api" })
 public class Swagger2SpringBoot implements CommandLineRunner {
 
     @Override
