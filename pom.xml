@@ -51,7 +51,7 @@
 		
 		<dependency>
 			<groupId>org.irods.jargon</groupId>
-			<artifactId>jargon-irods-ext</artifactId>
+			<artifactId>irodsext-metadata-template</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		
