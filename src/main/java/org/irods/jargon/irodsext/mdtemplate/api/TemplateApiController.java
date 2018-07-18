@@ -4,10 +4,13 @@ package org.irods.jargon.irodsext.mdtemplate.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 
+import org.irods.jargon.metadatatemplate.AbstractMetadataService;
+import org.irods.jargon.metadatatemplate.MetadataTemplateException;
 import org.irods.jargon.metadatatemplate.model.MDTemplate;
 import org.irods.jargon.metadatatemplate.model.MDTemplateElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,6 +26,7 @@ import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-07-17T12:26:03.800Z")
 
 @Controller
@@ -34,6 +38,9 @@ public class TemplateApiController implements TemplateApi {
 
     private final HttpServletRequest request;
 
+    @Autowired
+    public AbstractMetadataService abstractMetadataService;
+    
     @org.springframework.beans.factory.annotation.Autowired
     public TemplateApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
@@ -63,9 +70,17 @@ public class TemplateApiController implements TemplateApi {
     }
 
     @Override
-	public ResponseEntity<Void> findTemplateByGuid(@ApiParam(value = "pass an a guid to get template",required=true) @PathVariable("guid") String guid) {
+	public ResponseEntity<MDTemplate> findTemplateByGuid(@ApiParam(value = "pass an a guid to get template",required=true) @PathVariable("guid") String guid) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        MDTemplate mdTemplate = new MDTemplate();      
+        System.out.println("GUID is :: " +guid);
+        try {
+			mdTemplate = abstractMetadataService.findTemplateByUUID(UUID.fromString(guid));
+		} catch (MetadataTemplateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}        
+        return ResponseEntity.accepted().body(mdTemplate);
     }
 
     @Override

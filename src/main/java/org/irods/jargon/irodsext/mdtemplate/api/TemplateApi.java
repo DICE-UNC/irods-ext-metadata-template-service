@@ -74,7 +74,7 @@ public interface TemplateApi {
     @RequestMapping(value = "/template/{guid}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Void> findTemplateByGuid(@ApiParam(value = "pass an a guid to get template",required=true) @PathVariable("guid") String guid);
+    ResponseEntity<MDTemplate> findTemplateByGuid(@ApiParam(value = "pass an a guid to get template",required=true) @PathVariable("guid") String guid);
 
 
     @ApiOperation(value = "Get Element by guid", nickname = "getElementByGuid", notes = "", response = MDTemplateElement.class, tags={ "Element", })

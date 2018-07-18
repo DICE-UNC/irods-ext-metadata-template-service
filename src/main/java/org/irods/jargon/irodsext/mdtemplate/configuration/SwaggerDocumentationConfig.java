@@ -2,6 +2,8 @@ package org.irods.jargon.irodsext.mdtemplate.configuration;
 
 import org.irods.jargon.irodsext.mdtemplate.service.IrodsSampleTemplateService;
 import org.irods.jargon.irodsext.mdtemplate.service.IrodsSampleTemplateServiceImpl;
+import org.irods.jargon.metadatatemplate.AbstractMetadataService;
+import org.irodsext.mdtemplate.services.IrodsExtMetadataServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -47,10 +49,10 @@ public class SwaggerDocumentationConfig {
     	return new IrodsSampleTemplateServiceImpl();
     }
 
-    /*
+    
     @Bean
     public AbstractMetadataService abstractMetadataService(){
     	return new IrodsExtMetadataServiceImpl();
     }
-    */
+    
 }
