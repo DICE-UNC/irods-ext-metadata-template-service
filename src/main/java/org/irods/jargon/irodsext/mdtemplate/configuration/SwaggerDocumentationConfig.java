@@ -44,6 +44,8 @@ public class SwaggerDocumentationConfig {
                 .apiInfo(apiInfo());
     }
     
+    
+    
     @Bean
     public IrodsSampleTemplateService irodsSampleTemplateService(){
     	return new IrodsSampleTemplateServiceImpl();
