@@ -59,7 +59,7 @@ public interface TemplateApi {
     @RequestMapping(value = "/template/{guid}",
         produces = { "application/xml", "application/json" }, 
         method = RequestMethod.DELETE)
-    ResponseEntity<Void> deleteTemplate(@ApiParam(value = "template guid to delete",required=true) @PathVariable("guid") String guid);
+    ResponseEntity<String> deleteTemplate(@ApiParam(value = "template guid to delete",required=true) @PathVariable("guid") String guid);
 
 
     @ApiOperation(value = "Get template by id", nickname = "findTemplateByGuid", notes = "By passing in the appropriate options, you can search for available templates ", tags={ "Templates", })
@@ -102,6 +102,6 @@ public interface TemplateApi {
         produces = { "application/xml", "application/json" }, 
         consumes = { "application/json", "application/xml" },
         method = RequestMethod.PUT)
-    ResponseEntity<Void> updateTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData);
+    UUID updateTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData);
 
 }
