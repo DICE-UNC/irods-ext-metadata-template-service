@@ -48,35 +48,32 @@ public class TemplateApiController implements TemplateApi {
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(TemplateApiController.class);
-	
-	
-	@Override
-	public UUID addTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData) {
 
-		//check if the template already exist
-		//else
-		//add new template
-		System.out.println("Adding ne template !!" +templateData.getTemplateName());
-		UUID guid = null;
+
+	@Override
+	public ResponseEntity<String> addTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData) {
+		String accept = request.getHeader("Accept");
 		try {
-			templateData.setGuid(UUID.randomUUID().toString());
-			guid = abstractMetadataService.saveTemplate(templateData);
-		} catch (MetadataTemplateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}   
-		return guid;
-		/*if(guid == null)
-			return new ResponseEntity<MDTemplate>(templateData, HttpStatus.INTERNAL_SERVER_ERROR);	
-		else
-			return new ResponseEntity<MDTemplate>(templateData, HttpStatus.CREATED);
-*/	}
+			boolean isExist = abstractMetadataService.isTemplateExist(templateData.getTemplateName());
+			if(isExist) {
+				return new ResponseEntity<String>("Template with this name "+templateData.getTemplateName()+" already exist", HttpStatus.INTERNAL_SERVER_ERROR);	
+			}else {
+				logger.info("Adding new template !!" +templateData.getTemplateName());
+				templateData.setGuid(UUID.randomUUID().toString());
+				abstractMetadataService.saveTemplate(templateData);
+				return new ResponseEntity<String>(templateData.getGuid(), HttpStatus.OK);
+			}
+		} catch (MetadataTemplateException e1) {
+			e1.printStackTrace();
+		}
+		return new ResponseEntity<String>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);			
+	}
 
 	@Override
 	public ResponseEntity<MDTemplate> findTemplateByGuid(@ApiParam(value = "pass an a guid to get template",required=true) @PathVariable("guid") String guid) {
 		String accept = request.getHeader("Accept");
 		MDTemplate mdTemplate = new MDTemplate();      
-		System.out.println("GUID is :: " +guid);
+		logger.info("Find the template for GUID :: " +guid);
 		try {
 			mdTemplate = abstractMetadataService.findTemplateByGuid(UUID.fromString(guid));
 		} catch (MetadataTemplateException e) {
@@ -90,7 +87,7 @@ public class TemplateApiController implements TemplateApi {
 	@Override
 	public UUID updateTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData) {
 		String accept = request.getHeader("Accept");
-		System.out.println("Adding ne template !!" +templateData.getTemplateName());
+		System.out.println("Updating template !!" +templateData.getTemplateName());
 		UUID guid = null;
 		MDTemplate mdTemplate  = null;
 		try {
@@ -111,79 +108,112 @@ public class TemplateApiController implements TemplateApi {
 		}catch(Exception e){
 			logger.error("Could not modify template {}.", templateData.getTemplateName());
 		}
-			return guid;
-		}
+		return guid;
+	}
 
-		@Override
-		public ResponseEntity<String> deleteTemplate(@ApiParam(value = "template guid to delete",required=true) @PathVariable("guid") String guid) {
-			String accept = request.getHeader("Accept");
-			boolean isDeleted = false;
-			try {
-				isDeleted = abstractMetadataService.deleteTemplateByGuid(UUID.fromString(guid));
-			} catch (MetadataTemplateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}   
-			System.out.println("The guid - " +guid+ "data is deleted ..!!");
+	@Override
+	public ResponseEntity<String> deleteTemplate(@ApiParam(value = "template guid to delete",required=true) @PathVariable("guid") String guid) {
+		String accept = request.getHeader("Accept");
+		boolean isDeleted = false;
+		System.out.println("Deleting a template for GUID :: " +guid);
+		try {
+			isDeleted = abstractMetadataService.deleteTemplateByGuid(UUID.fromString(guid));
+		} catch (MetadataTemplateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}   
+		System.out.println("The guid - " +guid+ "data is deleted ..!!");
 
-			if(isDeleted)
-				return new ResponseEntity<String>("The guid - "+guid+ "data is deleted successfully", HttpStatus.OK);
-			else
-				return new ResponseEntity<String>("There is some issue deleting this data" , HttpStatus.INTERNAL_SERVER_ERROR);
-
-		}
-
-
-		//Element Operations
-
-		
-		@Override
-		public ResponseEntity<Void> addElement(@ApiParam(value = "unique object task name",required=true) @PathVariable("guid") String guid,@ApiParam(value = "Created Element object" ,required=true )  @Valid @RequestBody MDTemplateElement body) {
-			String accept = request.getHeader("Accept");
-			return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
-			
-			//get template id from guid
-			//save elements with the template parent_id (how to add parent id in element table?)
-		}
-
-		@Override
-		public ResponseEntity<Void> updateElement(@ApiParam(value = "Element that need to be updated",required=true) @PathVariable("guid") String guid,@ApiParam(value = "Updated Element object" ,required=true )  @Valid @RequestBody MDTemplateElement body) {
-			String accept = request.getHeader("Accept");
-			return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
-			
-			//get template id by guid 
-			//update elements with template parent_id (how to add parent id in element table?)
-		}
-
-		
-		@Override
-		public ResponseEntity<MDTemplateElement> getElementByGuid(@ApiParam(value = "The Element that needs to be fetched. ",required=true) @PathVariable("guid") String guid) {
-			String accept = request.getHeader("Accept");
-			if (accept != null && accept.contains("application/xml")) {
-				try {
-					return new ResponseEntity<MDTemplateElement>(objectMapper.readValue("<MDTemplateElement>  <guid>aeiou</guid>  <name>aeiou</name>  <defaultValue>aeiou</defaultValue>  <type>aeiou</type>  <required>true</required>  <options>aeiou</options>  <access_type>aeiou</access_type>  <validationExp>aeiou</validationExp>  <cardinalityMin>123</cardinalityMin>  <cardinalityMax>123</cardinalityMax></MDTemplateElement>", MDTemplateElement.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (IOException e) {
-					log.error("Couldn't serialize response for content type application/xml", e);
-					return new ResponseEntity<MDTemplateElement>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-
-			if (accept != null && accept.contains("application/json")) {
-				try {
-					return new ResponseEntity<MDTemplateElement>(objectMapper.readValue("{  \"access_type\" : \"access_type\",  \"defaultValue\" : \"defaultValue\",  \"elements\" : [ null, null ],  \"name\" : \"name\",  \"options\" : \"options\",  \"guid\" : \"guid\",  \"cardinalityMin\" : 1,  \"cardinalityMax\" : 5,  \"type\" : \"type\",  \"required\" : true,  \"validationExp\" : \"validationExp\"}", MDTemplateElement.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<MDTemplateElement>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-
-			return new ResponseEntity<MDTemplateElement>(HttpStatus.NOT_IMPLEMENTED);
-		}
-		
-		@Override
-		public ResponseEntity<Void> deleteElement(@ApiParam(value = "The Element that needs to be deleted",required=true) @PathVariable("guid") String guid) {
-			String accept = request.getHeader("Accept");
-			return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
-		}
+		if(isDeleted)
+			return new ResponseEntity<String>("The guid - "+guid+ "data is deleted successfully", HttpStatus.OK);
+		else
+			return new ResponseEntity<String>("There is some issue deleting this data" , HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
+
+
+	//Element Operations
+
+	
+      
+	@Override
+	public ResponseEntity<MDTemplateElement> addElement(@ApiParam(value = "unique object task name",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "Created Element object" ,required=true )  @Valid @RequestBody MDTemplateElement body) {
+		String accept = request.getHeader("Accept");
+
+		//get template id from guid
+		//save elements with the template parent_id (how to add parent id in element table?)
+
+		logger.info("Saving Element for templateGuid :: " +templateGuid);
+		body.setGuid(UUID.randomUUID().toString());
+		logger.info("body :: " +body);
+		UUID uuid = null;
+		try {	
+			uuid = abstractMetadataService.saveElement(UUID.fromString(templateGuid), body);
+		} catch (MetadataTemplateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if(uuid == null)
+			return new ResponseEntity<MDTemplateElement>(body, HttpStatus.INTERNAL_SERVER_ERROR);	
+		else
+			return new ResponseEntity<MDTemplateElement>(body, HttpStatus.OK);
+	}
+
+
+	@Override
+	public ResponseEntity<Void> updateElement(@ApiParam(value = "Element that need to be updated",required=true) @PathVariable("guid") String guid,@ApiParam(value = "Updated Element object" ,required=true )  @Valid @RequestBody MDTemplateElement body) {
+		String accept = request.getHeader("Accept");
+		return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+
+
+		//get template id by guid 
+		//update elements with template parent_id (how to add parent id in element table?)
+	}
+
+	@Override
+	public ResponseEntity<MDTemplateElement> getElementByGuid(@ApiParam(value = "The Template Guid. ",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "The Element guid needs to be fetched",required=true) @PathVariable("elementGuid") String elementGuid) {
+		String accept = request.getHeader("Accept");
+
+		if (accept != null && accept.contains("application/xml")) {
+			try {
+				MDTemplateElement mdElement = abstractMetadataService.findElementByGuid(UUID.fromString(templateGuid), UUID.fromString(elementGuid));
+				return new ResponseEntity<MDTemplateElement>(objectMapper.readValue("<MDTemplateElement>  <guid>aeiou</guid>  <name>aeiou</name>  <defaultValue>aeiou</defaultValue>  <type>aeiou</type>  <required>true</required>  <options>aeiou</options>  <access_type>aeiou</access_type>  <validationExp>aeiou</validationExp>  <cardinalityMin>123</cardinalityMin>  <cardinalityMax>123</cardinalityMax></MDTemplateElement>", MDTemplateElement.class), HttpStatus.OK);
+			} catch (MetadataTemplateException | IOException e) {
+				log.error("Couldn't serialize response for content type application/xml", e);
+				return new ResponseEntity<MDTemplateElement>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+
+		if (accept != null && accept.contains("application/json")) {
+			try {
+				MDTemplateElement mdElement = abstractMetadataService.findElementByGuid(UUID.fromString(templateGuid), UUID.fromString(elementGuid));
+				return new ResponseEntity<MDTemplateElement>(objectMapper.readValue("{  \"access_type\" : \"access_type\",  \"defaultValue\" : \"defaultValue\",  \"elements\" : [ null, null ],  \"name\" : \"name\",  \"options\" : \"options\",  \"guid\" : \"guid\",  \"cardinalityMin\" : 1,  \"cardinalityMax\" : 5,  \"type\" : \"type\",  \"required\" : true,  \"validationExp\" : \"validationExp\"}", MDTemplateElement.class), HttpStatus.OK);
+			} catch (MetadataTemplateException | IOException e) {
+				log.error("Couldn't serialize response for content type application/json", e);
+				return new ResponseEntity<MDTemplateElement>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+
+		return new ResponseEntity<MDTemplateElement>(HttpStatus.NOT_IMPLEMENTED);      
+	}
+
+
+	@Override
+	public ResponseEntity<String> deleteElement(@ApiParam(value = "The Template Guid. ",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "The Element guid needs to be fetched",required=true) @PathVariable("elementGuid") String elementGuid) {
+		String accept = request.getHeader("Accept");
+		boolean isDeleted = false;
+		try {
+			isDeleted = abstractMetadataService.deleteElementByGuid(UUID.fromString(templateGuid), UUID.fromString(elementGuid));
+		} catch (MetadataTemplateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}   
+
+		if(isDeleted)
+			return new ResponseEntity<String>("The Element for this guid - "+elementGuid+ " is deleted successfully", HttpStatus.OK);
+		else
+			return new ResponseEntity<String>("There is some issue deleting this data" , HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+}
