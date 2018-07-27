@@ -53,12 +53,16 @@ public class TemplateApiController implements TemplateApi {
 	@Override
 	public ResponseEntity<String> addTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData) {
 		String accept = request.getHeader("Accept");
+		
+		logger.info("Adding new template !!" +templateData.getTemplateName());
+		
 		try {
 			boolean isExist = abstractMetadataService.isTemplateExist(templateData.getTemplateName());
+			logger.info("Template already exists :: " +isExist);
 			if(isExist) {
 				return new ResponseEntity<String>("Template with this name "+templateData.getTemplateName()+" already exist", HttpStatus.INTERNAL_SERVER_ERROR);	
 			}else {
-				logger.info("Adding new template !!" +templateData.getTemplateName());
+				
 				templateData.setGuid(UUID.randomUUID().toString());
 				abstractMetadataService.saveTemplate(templateData);
 				return new ResponseEntity<String>(templateData.getGuid(), HttpStatus.OK);
@@ -178,8 +182,8 @@ public class TemplateApiController implements TemplateApi {
 		if (accept != null && accept.contains("application/xml")) {
 			try {
 				MDTemplateElement mdElement = abstractMetadataService.findElementByGuid(UUID.fromString(templateGuid), UUID.fromString(elementGuid));
-				return new ResponseEntity<MDTemplateElement>(objectMapper.readValue("<MDTemplateElement>  <guid>aeiou</guid>  <name>aeiou</name>  <defaultValue>aeiou</defaultValue>  <type>aeiou</type>  <required>true</required>  <options>aeiou</options>  <access_type>aeiou</access_type>  <validationExp>aeiou</validationExp>  <cardinalityMin>123</cardinalityMin>  <cardinalityMax>123</cardinalityMax></MDTemplateElement>", MDTemplateElement.class), HttpStatus.OK);
-			} catch (MetadataTemplateException | IOException e) {
+				return ResponseEntity.accepted().body(mdElement);
+			} catch (MetadataTemplateException e) {
 				log.error("Couldn't serialize response for content type application/xml", e);
 				return new ResponseEntity<MDTemplateElement>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
@@ -188,8 +192,8 @@ public class TemplateApiController implements TemplateApi {
 		if (accept != null && accept.contains("application/json")) {
 			try {
 				MDTemplateElement mdElement = abstractMetadataService.findElementByGuid(UUID.fromString(templateGuid), UUID.fromString(elementGuid));
-				return new ResponseEntity<MDTemplateElement>(objectMapper.readValue("{  \"access_type\" : \"access_type\",  \"defaultValue\" : \"defaultValue\",  \"elements\" : [ null, null ],  \"name\" : \"name\",  \"options\" : \"options\",  \"guid\" : \"guid\",  \"cardinalityMin\" : 1,  \"cardinalityMax\" : 5,  \"type\" : \"type\",  \"required\" : true,  \"validationExp\" : \"validationExp\"}", MDTemplateElement.class), HttpStatus.OK);
-			} catch (MetadataTemplateException | IOException e) {
+				return ResponseEntity.accepted().body(mdElement);
+			} catch (MetadataTemplateException e) {
 				log.error("Couldn't serialize response for content type application/json", e);
 				return new ResponseEntity<MDTemplateElement>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
