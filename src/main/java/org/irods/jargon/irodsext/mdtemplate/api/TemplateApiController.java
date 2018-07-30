@@ -89,7 +89,7 @@ public class TemplateApiController implements TemplateApi {
 
 
 	@Override
-	public UUID updateTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData) {
+	public  ResponseEntity<String> updateTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData) {
 		String accept = request.getHeader("Accept");
 		System.out.println("Updating template !!" +templateData.getTemplateName());
 		UUID guid = null;
@@ -104,6 +104,7 @@ public class TemplateApiController implements TemplateApi {
 				try {
 					//templateData.setGuid(UUID.randomUUID().toString());
 					guid = abstractMetadataService.updateTemplate(templateData);
+					return new ResponseEntity<String>(templateData.getGuid(), HttpStatus.OK);
 				} catch (MetadataTemplateException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -112,7 +113,7 @@ public class TemplateApiController implements TemplateApi {
 		}catch(Exception e){
 			logger.error("Could not modify template {}.", templateData.getTemplateName());
 		}
-		return guid;
+		return new ResponseEntity<String>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@Override
