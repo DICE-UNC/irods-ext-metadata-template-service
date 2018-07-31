@@ -107,6 +107,6 @@ public interface TemplateApi {
         produces = { "application/xml", "application/json" }, 
         consumes = { "application/json", "application/xml" },
         method = RequestMethod.PUT)
-    UUID updateTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData);
+    ResponseEntity<String> updateTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData);
 
 }
