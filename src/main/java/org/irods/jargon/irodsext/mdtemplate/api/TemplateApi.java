@@ -95,7 +95,7 @@ public interface TemplateApi {
     @RequestMapping(value = "/template/{templateGuid}/element",
         produces = { "application/xml", "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<Void> updateElement(@ApiParam(value = "Element that need to be updated",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "Updated Element object" ,required=true )  @Valid @RequestBody MDTemplateElement body);
+    ResponseEntity<String> updateElement(@ApiParam(value = "Element that need to be updated",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "Updated Element object" ,required=true )  @Valid @RequestBody MDTemplateElement body);
 
 
     @ApiOperation(value = "Update an existing Template", nickname = "updateTemplate", notes = "", tags={ "Templates", })

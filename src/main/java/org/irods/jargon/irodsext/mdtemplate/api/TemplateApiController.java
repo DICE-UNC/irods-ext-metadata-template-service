@@ -32,7 +32,7 @@ import java.util.UUID;
 @RestController
 public class TemplateApiController implements TemplateApi {
 
-	private static final Logger log = LoggerFactory.getLogger(TemplateApiController.class);
+	private static final Logger logger = LoggerFactory.getLogger(TemplateApiController.class);
 
 	private final ObjectMapper objectMapper;
 
@@ -46,9 +46,6 @@ public class TemplateApiController implements TemplateApi {
 		this.objectMapper = objectMapper;
 		this.request = request;
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(TemplateApiController.class);
-
 
 	@Override
 	public ResponseEntity<String> addTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData) {
@@ -69,8 +66,9 @@ public class TemplateApiController implements TemplateApi {
 			}
 		} catch (MetadataTemplateException e1) {
 			e1.printStackTrace();
+			return new ResponseEntity<String>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<String>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);			
+					
 	}
 
 	@Override
@@ -91,55 +89,43 @@ public class TemplateApiController implements TemplateApi {
 	@Override
 	public  ResponseEntity<String> updateTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData) {
 		String accept = request.getHeader("Accept");
-		System.out.println("Updating template !!" +templateData.getTemplateName());
-		UUID guid = null;
+		logger.info("Updating template !!" +templateData.getTemplateName()+ " , and guid is :: " +templateData.getGuid());
 		MDTemplate mdTemplate  = null;
 		try {
 			mdTemplate = abstractMetadataService.findTemplateByGuid(UUID.fromString(templateData.getGuid()));
-
+			logger.info("mdtemplate :: " +mdTemplate);
 			if (mdTemplate == null) {
 				throw new Exception("Cannot modify a non-existent template");
 			}else {
-
-				try {
-					//templateData.setGuid(UUID.randomUUID().toString());
-					guid = abstractMetadataService.updateTemplate(templateData);
-					return new ResponseEntity<String>(templateData.getGuid(), HttpStatus.OK);
-				} catch (MetadataTemplateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				//templateData.setGuid(UUID.randomUUID().toString());
+				logger.info("updating template");
+				abstractMetadataService.updateTemplate(templateData);
+				return new ResponseEntity<String>(templateData.getGuid(), HttpStatus.OK);
 			} 
 		}catch(Exception e){
 			logger.error("Could not modify template {}.", templateData.getTemplateName());
+			return new ResponseEntity<String>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<String>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+
 	}
 
 	@Override
 	public ResponseEntity<String> deleteTemplate(@ApiParam(value = "template guid to delete",required=true) @PathVariable("guid") String guid) {
 		String accept = request.getHeader("Accept");
-		boolean isDeleted = false;
-		System.out.println("Deleting a template for GUID :: " +guid);
+		logger.info("Deleting a template for GUID :: " +guid);
 		try {
-			isDeleted = abstractMetadataService.deleteTemplateByGuid(UUID.fromString(guid));
+			abstractMetadataService.deleteTemplateByGuid(UUID.fromString(guid));
+			return new ResponseEntity<String>("The guid - "+guid+ "data is deleted successfully", HttpStatus.OK);
 		} catch (MetadataTemplateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}   
-		System.out.println("The guid - " +guid+ "data is deleted ..!!");
-
-		if(isDeleted)
-			return new ResponseEntity<String>("The guid - "+guid+ "data is deleted successfully", HttpStatus.OK);
-		else
 			return new ResponseEntity<String>("There is some issue deleting this data" , HttpStatus.INTERNAL_SERVER_ERROR);
-
+		}   
 	}
 
 
 	//Element Operations
 
-	
       
 	@Override
 	public ResponseEntity<MDTemplateElement> addElement(@ApiParam(value = "unique object task name",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "Created Element object" ,required=true )  @Valid @RequestBody MDTemplateElement body) {
@@ -151,31 +137,19 @@ public class TemplateApiController implements TemplateApi {
 		logger.info("Saving Element for templateGuid :: " +templateGuid);
 		body.setGuid(UUID.randomUUID().toString());
 		logger.info("body :: " +body);
-		UUID uuid = null;
+		
 		try {	
-			uuid = abstractMetadataService.saveElement(UUID.fromString(templateGuid), body);
+			abstractMetadataService.saveElement(UUID.fromString(templateGuid), body);
+			return new ResponseEntity<MDTemplateElement>(body, HttpStatus.OK);
 		} catch (MetadataTemplateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-
-		if(uuid == null)
 			return new ResponseEntity<MDTemplateElement>(body, HttpStatus.INTERNAL_SERVER_ERROR);	
-		else
-			return new ResponseEntity<MDTemplateElement>(body, HttpStatus.OK);
+		}			
 	}
 
 
-	@Override
-	public ResponseEntity<Void> updateElement(@ApiParam(value = "Element that need to be updated",required=true) @PathVariable("guid") String guid,@ApiParam(value = "Updated Element object" ,required=true )  @Valid @RequestBody MDTemplateElement body) {
-		String accept = request.getHeader("Accept");
-		return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
-
-
-		//get template id by guid 
-		//update elements with template parent_id (how to add parent id in element table?)
-	}
-
+	
 	@Override
 	public ResponseEntity<MDTemplateElement> getElementByGuid(@ApiParam(value = "The Template Guid. ",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "The Element guid needs to be fetched",required=true) @PathVariable("elementGuid") String elementGuid) {
 		String accept = request.getHeader("Accept");
@@ -185,7 +159,7 @@ public class TemplateApiController implements TemplateApi {
 				MDTemplateElement mdElement = abstractMetadataService.findElementByGuid(UUID.fromString(templateGuid), UUID.fromString(elementGuid));
 				return ResponseEntity.accepted().body(mdElement);
 			} catch (MetadataTemplateException e) {
-				log.error("Couldn't serialize response for content type application/xml", e);
+				logger.error("Couldn't serialize response for content type application/xml", e);
 				return new ResponseEntity<MDTemplateElement>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
@@ -195,7 +169,7 @@ public class TemplateApiController implements TemplateApi {
 				MDTemplateElement mdElement = abstractMetadataService.findElementByGuid(UUID.fromString(templateGuid), UUID.fromString(elementGuid));
 				return ResponseEntity.accepted().body(mdElement);
 			} catch (MetadataTemplateException e) {
-				log.error("Couldn't serialize response for content type application/json", e);
+				logger.error("Couldn't serialize response for content type application/json", e);
 				return new ResponseEntity<MDTemplateElement>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
@@ -207,18 +181,36 @@ public class TemplateApiController implements TemplateApi {
 	@Override
 	public ResponseEntity<String> deleteElement(@ApiParam(value = "The Template Guid. ",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "The Element guid needs to be fetched",required=true) @PathVariable("elementGuid") String elementGuid) {
 		String accept = request.getHeader("Accept");
-		boolean isDeleted = false;
+		
 		try {
-			isDeleted = abstractMetadataService.deleteElementByGuid(UUID.fromString(templateGuid), UUID.fromString(elementGuid));
+			abstractMetadataService.deleteElementByGuid(UUID.fromString(templateGuid), UUID.fromString(elementGuid));
+			return new ResponseEntity<String>("The Element for this guid - "+elementGuid+ " is deleted successfully", HttpStatus.OK);
 		} catch (MetadataTemplateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}   
-
-		if(isDeleted)
-			return new ResponseEntity<String>("The Element for this guid - "+elementGuid+ " is deleted successfully", HttpStatus.OK);
-		else
 			return new ResponseEntity<String>("There is some issue deleting this data" , HttpStatus.INTERNAL_SERVER_ERROR);
+		}   
 	}
 
+	  public ResponseEntity<String> updateElement(@ApiParam(value = "Element that need to be updated",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "Updated Element object" ,required=true )  @Valid @RequestBody MDTemplateElement body) {
+		  String accept = request.getHeader("Accept");
+			logger.info("Updating element !!" +body.getName()+ " , and guid is :: " +body.getGuid() + ", and the template guid is :: " + templateGuid );
+			MDTemplateElement element = null;
+			try {
+				logger.info("if the element exist");
+				element = abstractMetadataService.findElementByGuid(UUID.fromString(templateGuid), UUID.fromString(body.getGuid()));
+				logger.info("element :: " +element);
+				if (element == null) {
+					throw new Exception("This element {} " +body.getGuid() + " does not exist") ;
+				}else {
+					logger.info("updating element");
+					abstractMetadataService.updateElement(UUID.fromString(templateGuid), body);
+					return new ResponseEntity<String>(body.getGuid(), HttpStatus.OK);
+				} 
+			}catch(Exception e){
+				logger.error("Could not modify element {}.", element.getName());
+				return new ResponseEntity<String>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+	    }
+	
 }
