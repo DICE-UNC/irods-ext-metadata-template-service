@@ -31,7 +31,7 @@ import java.util.UUID;
 @Controller
 public class TemplateApiController implements TemplateApi {
 
-	private static final Logger logger = LoggerFactory.getLogger(TemplateApiControllerBKup.class);
+	private static final Logger logger = LoggerFactory.getLogger(TemplateApiController.class);
 
 	private final ObjectMapper objectMapper;
 
