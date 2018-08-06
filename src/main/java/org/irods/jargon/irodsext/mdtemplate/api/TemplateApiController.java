@@ -60,7 +60,7 @@ public class TemplateApiController implements TemplateApi {
 
 				templateData.setGuid(UUID.randomUUID().toString());
 				MDTemplate template = abstractMetadataService.saveTemplate(templateData);
-				return new ResponseEntity<MDTemplate>(template, HttpStatus.OK);
+				return new ResponseEntity<MDTemplate>(template, HttpStatus.CREATED);
 			}
 		} catch (MetadataTemplateException e1) {
 			e1.printStackTrace();
