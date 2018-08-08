@@ -35,6 +35,13 @@
 			<version>${spring.boot.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+			<version>${spring.boot.version}</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -217,12 +224,12 @@
 						<configuration>
 							<tasks>
 								<delete
-									file="${basedir}/src/test/resources/test.rest.properties" />
+									file="${basedir}/src/test/resources/test.metadatatemplate.properties" />
 								<touch
-									file="${basedir}/src/test/resources/test.rest.properties"
+									file="${basedir}/src/test/resources/test.metadatatemplate.properties"
 									mkdirs="true" />
 								<echo
-									file="${basedir}/src/test/resources/test.rest.properties"
+									file="${basedir}/src/test/resources/test.metadatatemplate.properties"
 									append="true">
 									irods.host=${jargon.test.irods.host}
 									irods.port=${jargon.test.irods.port}
