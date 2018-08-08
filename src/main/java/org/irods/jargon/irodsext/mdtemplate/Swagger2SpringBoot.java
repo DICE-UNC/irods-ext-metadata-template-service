@@ -6,12 +6,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication(exclude = { HibernateJpaAutoConfiguration.class} )
 @EnableSwagger2
 @ComponentScan(basePackages = { "org.irods.jargon.irodsext.mdtemplate", "org.irods.jargon.irodsext.mdtemplate.api" })
+@Configuration
+@PropertySource(value = { "file:///etc/irods-ext/metadatatemplate.properties" })
 public class Swagger2SpringBoot implements CommandLineRunner {
 
     @Override

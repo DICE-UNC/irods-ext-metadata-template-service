@@ -10,4 +10,4 @@ else
 fi
 
 echo "running app"
-java -jar /MetadataTemplateService.jar
+java -jar /metadata-template-rest.jar

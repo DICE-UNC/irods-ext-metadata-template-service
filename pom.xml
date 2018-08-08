@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>gov.nih.niehs.ods.swagger</groupId>
+	<groupId>org.irods.jargon</groupId>
 	<artifactId>mdtemplate</artifactId>
 	<packaging>jar</packaging>
 	<name>mdtemplate</name>
@@ -105,40 +105,31 @@
 		</dependency>
 	</dependencies>
 
-	<build>
+	<build>		
+		<finalName>metadata-template-rest</finalName>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<configuration>
-							<tasks>
-								<echo message="copying jar file up to docker" />
-								<copy file="target/MetadataTemplateService.jar"
-									todir="../../packaging/docker" />
-								<echo message="jar file copied " />
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+			 <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                    <mainClass>org.irods.jargon.irodsext.mdtemplate.Swagger2SpringBoot</mainClass>
+                </configuration>
+                  <executions>
+                    <execution>
+                      <goals>
+                        <goal>repackage</goal>
+                      </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.20.1</version>
 				<configuration />
-
-
 			</plugin>
-			<plugin>
+				<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
@@ -239,7 +230,7 @@
 									default.storage.resource=${jargon.test.irods.resource}
 									ssl.negotiation.policy=${metalnx.ssl.policy}
 
-									db.driverClassName=${metalnx.jdbc.driver}
+									db.driver=${metalnx.jdbc.driver}
 									db.url=${metalnx.jdbc.url}
 									db.username=${metalnx.jdbc.user}
 									db.password=${metalnx.jdbc.password}
