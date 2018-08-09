@@ -9,5 +9,5 @@ else
    echo "No cert to import"
 fi
 
-echo "running catalina"
-catalina.sh run > /tmp/catalina.out
+echo "running app"
+java -jar /metadata-template-rest.jar
