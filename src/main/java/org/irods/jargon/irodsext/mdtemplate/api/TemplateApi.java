@@ -29,7 +29,7 @@ public interface TemplateApi {
         @ApiResponse(code = 400, message = "Invalid Element supplied"),
         @ApiResponse(code = 404, message = "Element not found") })
     @RequestMapping(value = "/template/{templateGuid}/element",
-        produces = { "application/xml", "application/json" }, 
+        produces = { "application/json" }, 
         method = RequestMethod.POST)
     ResponseEntity<MDTemplateElement> addElement(@ApiParam(value = "unique object task name",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "Created Element object" ,required=true )  @Valid @RequestBody MDTemplateElement body);
 
@@ -39,8 +39,8 @@ public interface TemplateApi {
         @ApiResponse(code = 200, message = "Template Successfully Created.", response = MDTemplate.class),
         @ApiResponse(code = 405, message = "Invalid input") })
     @RequestMapping(value = "/template",
-        produces = { "application/xml", "application/json" }, 
-        consumes = { "application/json", "application/xml" },
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
         method = RequestMethod.POST)
     ResponseEntity<MDTemplate> addTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData);
 
@@ -51,7 +51,7 @@ public interface TemplateApi {
         @ApiResponse(code = 400, message = "Invalid guid supplied"),
         @ApiResponse(code = 404, message = "Element not found") })
     @RequestMapping(value = "/template/{templateGuid}/element/{elementGuid}",
-        produces = { "application/xml", "application/json" }, 
+        produces = { "application/json" }, 
         method = RequestMethod.DELETE)
     ResponseEntity<Void> deleteElement(@ApiParam(value = "The Template Guid. ",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "The Element guid needs to be fetched",required=true) @PathVariable("elementGuid") String elementGuid);
 
@@ -62,7 +62,7 @@ public interface TemplateApi {
         @ApiResponse(code = 400, message = "Invalid ID supplied"),
         @ApiResponse(code = 404, message = "Template not found") })
     @RequestMapping(value = "/template/{guid}",
-        produces = { "application/xml", "application/json" }, 
+        produces = { "application/json" }, 
         method = RequestMethod.DELETE)
     ResponseEntity<Void> deleteTemplate(@ApiParam(value = "template guid to delete",required=true) @PathVariable("guid") String guid);
 
@@ -83,7 +83,7 @@ public interface TemplateApi {
         @ApiResponse(code = 400, message = "Invalid guid supplied"),
         @ApiResponse(code = 404, message = "Element not found") })
     @RequestMapping(value = "/template/{templateGuid}/element/{elementGuid}",
-        produces = { "application/xml", "application/json" }, 
+        produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<MDTemplateElement> getElementByGuid(@ApiParam(value = "The Template Guid. ",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "The Element guid needs to be fetched",required=true) @PathVariable("elementGuid") String elementGuid);
 
@@ -94,7 +94,7 @@ public interface TemplateApi {
         @ApiResponse(code = 400, message = "Invalid Element supplied"),
         @ApiResponse(code = 404, message = "Element not found") })
     @RequestMapping(value = "/template/{templateGuid}/element",
-        produces = { "application/xml", "application/json" }, 
+        produces = { "application/json" }, 
         method = RequestMethod.PUT)
     ResponseEntity<MDTemplateElement> updateElement(@ApiParam(value = "Element that need to be updated",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "Updated Element object" ,required=true )  @Valid @RequestBody MDTemplateElement body);
 
@@ -106,8 +106,8 @@ public interface TemplateApi {
         @ApiResponse(code = 404, message = "Template not found"),
         @ApiResponse(code = 405, message = "Validation exception") })
     @RequestMapping(value = "/template",
-        produces = { "application/xml", "application/json" }, 
-        consumes = { "application/json", "application/xml" },
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
         method = RequestMethod.PUT)
     ResponseEntity<MDTemplate> updateTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData);
 

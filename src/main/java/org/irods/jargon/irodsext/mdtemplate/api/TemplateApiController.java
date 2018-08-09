@@ -48,7 +48,7 @@ public class TemplateApiController implements TemplateApi {
 
 	public ResponseEntity<MDTemplate> addTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData) {
 		String accept = request.getHeader("Accept");
-
+		MDTemplate mdTemplate = new MDTemplate();
 		logger.info("Adding new template !!" +templateData.getTemplateName());
 
 		try {
@@ -59,14 +59,14 @@ public class TemplateApiController implements TemplateApi {
 			}else {
 
 				templateData.setGuid(UUID.randomUUID().toString());
-				MDTemplate template = abstractMetadataService.saveTemplate(templateData);
-				return new ResponseEntity<MDTemplate>(template, HttpStatus.CREATED);
+				mdTemplate = abstractMetadataService.saveTemplate(templateData);
+				
 			}
 		} catch (MetadataTemplateException e1) {
 			e1.printStackTrace();
 			return new ResponseEntity<MDTemplate>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
+		return new ResponseEntity<MDTemplate>(mdTemplate, HttpStatus.CREATED);
 	}
 
 	public ResponseEntity<MDTemplate> findTemplateByGuid(@ApiParam(value = "pass an a guid to get template",required=true) @PathVariable("guid") String guid) {
@@ -127,40 +127,30 @@ public class TemplateApiController implements TemplateApi {
 		logger.info("Saving Element for templateGuid :: " +templateGuid);
 		body.setGuid(UUID.randomUUID().toString());
 		logger.info("body :: " +body);
+		MDTemplateElement mdElement = new MDTemplateElement();
 		
 		try {	
-			abstractMetadataService.saveElement(UUID.fromString(templateGuid), body);
-			return new ResponseEntity<MDTemplateElement>(body, HttpStatus.OK);
+			mdElement = abstractMetadataService.saveElement(UUID.fromString(templateGuid), body);			
 		} catch (MetadataTemplateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new ResponseEntity<MDTemplateElement>(body, HttpStatus.INTERNAL_SERVER_ERROR);	
-		}			
+			return new ResponseEntity<MDTemplateElement>(mdElement, HttpStatus.INTERNAL_SERVER_ERROR);	
+		}	
+		return new ResponseEntity<MDTemplateElement>(mdElement, HttpStatus.OK);
 	}
 	
 	public ResponseEntity<MDTemplateElement> getElementByGuid(@ApiParam(value = "The Template Guid. ",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "The Element guid needs to be fetched",required=true) @PathVariable("elementGuid") String elementGuid) {
 		String accept = request.getHeader("Accept");
-		if (accept != null && accept.contains("application/xml")) {
-			try {
-				MDTemplateElement mdElement = abstractMetadataService.findElementByGuid(UUID.fromString(templateGuid), UUID.fromString(elementGuid));
-				return ResponseEntity.accepted().body(mdElement);
-			} catch (MetadataTemplateException e) {
-				logger.error("Couldn't serialize response for content type application/xml", e);
-				return new ResponseEntity<MDTemplateElement>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
+		MDTemplateElement mdElement = new MDTemplateElement();
+		try {
+			mdElement = abstractMetadataService.findElementByGuid(UUID.fromString(templateGuid), UUID.fromString(elementGuid));
+			logger.info("Element :: " +mdElement);
+			
+		} catch (MetadataTemplateException e) {
+			logger.error("Couldn't serialize response for content type application/json", e);
+			return new ResponseEntity<MDTemplateElement>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
-		if (accept != null && accept.contains("application/json")) {
-			try {
-				MDTemplateElement mdElement = abstractMetadataService.findElementByGuid(UUID.fromString(templateGuid), UUID.fromString(elementGuid));
-				return ResponseEntity.accepted().body(mdElement);
-			} catch (MetadataTemplateException e) {
-				logger.error("Couldn't serialize response for content type application/json", e);
-				return new ResponseEntity<MDTemplateElement>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-		}
-
-		return new ResponseEntity<MDTemplateElement>(HttpStatus.NOT_IMPLEMENTED);      
+		return ResponseEntity.accepted().body(mdElement);
 	}
 
 	public ResponseEntity<MDTemplateElement> updateElement(@ApiParam(value = "Element that need to be updated",required=true) @PathVariable("templateGuid") String templateGuid,@ApiParam(value = "Updated Element object" ,required=true )  @Valid @RequestBody MDTemplateElement body) {

@@ -35,6 +35,17 @@
 			<version>${spring.boot.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+			<version>${spring.boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.7.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -110,12 +121,12 @@
 					<execution>
 						<phase>package</phase>
 						<configuration>
-							<tasks>
+							<!-- <tasks>
 								<echo message="copying jar file up to docker" />
 								<copy file="target/MetadataTemplateService.jar"
 									todir="../../packaging/docker" />
 								<echo message="jar file copied " />
-							</tasks>
+							</tasks> -->
 						</configuration>
 						<goals>
 							<goal>run</goal>
