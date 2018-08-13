@@ -15,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @ComponentScan(basePackages = { "org.irods.jargon.irodsext.mdtemplate", "org.irods.jargon.irodsext.mdtemplate.api" })
 @Configuration
-@PropertySource(value = { "file:///etc/irods-ext/metadatatemplate.properties" })
+@PropertySource(value = { "file:///C:/Users/hetalben/opt/etc/irods-ext/metadatatemplate.properties" })
 public class Swagger2SpringBoot implements CommandLineRunner {
 
     @Override
