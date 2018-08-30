@@ -111,4 +111,23 @@ public interface TemplateApi {
         method = RequestMethod.PUT)
     ResponseEntity<MDTemplate> updateTemplate(@ApiParam(value = "Template object that needs to be added to the system" ,required=true )  @Valid @RequestBody MDTemplate templateData);
 
+    @ApiOperation(value = "Get All Elements", nickname = "getAllElements", notes = "", response = MDTemplateElement.class, responseContainer = "List", tags={ "Element", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "successful operation", response = MDTemplateElement.class, responseContainer = "List"),
+        @ApiResponse(code = 400, message = "Invalid guid supplied"),
+        @ApiResponse(code = 404, message = "Element not found") })
+    @RequestMapping(value = "/template/{templateGuid}/element",
+        produces = { "application/xml", "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<List<MDTemplateElement>> getAllElements(@ApiParam(value = "unique object task name",required=true) @PathVariable("templateGuid") String templateGuid);
+
+
+    @ApiOperation(value = "Get all templates", nickname = "getAllTemplate", notes = "This will retrun all the templates based on permission ", response = MDTemplate.class, responseContainer = "List", tags={ "Templates", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "All templates", response = MDTemplate.class, responseContainer = "List") })
+    @RequestMapping(value = "/template",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<List<MDTemplate>> getAllTemplate();
+
 }

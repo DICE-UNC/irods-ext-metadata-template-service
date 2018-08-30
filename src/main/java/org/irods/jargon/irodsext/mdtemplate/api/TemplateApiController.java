@@ -118,6 +118,17 @@ public class TemplateApiController implements TemplateApi {
 		}   
 	}
 
+	 public ResponseEntity<List<MDTemplate>> getAllTemplate() {
+	        String accept = request.getHeader("Accept");
+	        logger.info("get templates");
+	        if (accept != null && accept.contains("application/json")) {
+	        	logger.info("getting all templates");
+	            List<MDTemplate> templates = abstractMetadataService.listAllTemplates();
+				return new ResponseEntity<List<MDTemplate>>(templates, HttpStatus.OK);
+	        }
+	        return new ResponseEntity<List<MDTemplate>>(HttpStatus.NOT_IMPLEMENTED);
+	    }
+
 
 	/****************************************************************Elements Operation *********************************************************************/
 
@@ -186,6 +197,17 @@ public class TemplateApiController implements TemplateApi {
 	}
 
 
+	public ResponseEntity<List<MDTemplateElement>> getAllElements(@ApiParam(value = "unique object task name",required=true) @PathVariable("templateGuid") String templateGuid) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            List<MDTemplateElement> elements = abstractMetadataService.listAllElements(UUID.fromString(templateGuid));
+			return new ResponseEntity<List<MDTemplateElement>>(elements, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<List<MDTemplateElement>>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+   
 
 
 
