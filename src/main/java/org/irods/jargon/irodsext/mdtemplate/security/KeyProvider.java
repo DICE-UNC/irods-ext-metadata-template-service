@@ -17,14 +17,8 @@ public class KeyProvider {
 
 
 	static RSAPrivateKey getPrivatekey() throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
-		//File pubKeyFile = ...
+		
 		File privKeyFile = new File("C:\\Users\\hetalben\\opt\\etc\\key\\private.der");
-
-		/*// read public key DER file
-				DataInputStream dis = new DataInputStream(new FileInputStream(pubKeyFile));
-		byte[] pubKeyBytes = new byte[(int)pubKeyFile.length()];
-		dis.readFully(pubKeyBytes);
-		dis.close();*/
 
 		// read private key DER file
 		DataInputStream dis = new DataInputStream(new FileInputStream(privKeyFile));
@@ -34,10 +28,7 @@ public class KeyProvider {
 
 		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 
-		/*// decode public key
-		X509EncodedKeySpec pubSpec = new X509EncodedKeySpec(pubKeyBytes);
-		RSAPublicKey pubKey = (RSAPublicKey) keyFactory.generatePublic(pubSpec);
-		 */
+		
 		// decode private key
 		PKCS8EncodedKeySpec privSpec = new PKCS8EncodedKeySpec(privKeyBytes);
 		RSAPrivateKey privKey = (RSAPrivateKey) keyFactory.generatePrivate(privSpec);
